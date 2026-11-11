@@ -55,6 +55,7 @@ export function LogoHorizontal({
         tone === "light" ? "text-ivory" : "text-ink",
         className
       )}
+      role="img"
       aria-label="Milano Villa — Italian Design and Furnishings"
     >
       <LogoMark
@@ -105,6 +106,7 @@ export function LogoStacked({
         tone === "light" ? "text-ivory" : "text-ink",
         className
       )}
+      role="img"
       aria-label="Milano Villa — Italian Design and Furnishings"
     >
       <LogoMark tone={tone} className="h-16 w-16 md:h-20 md:w-20" />

@@ -164,8 +164,8 @@ export default function CommissionDetail({ slug }: { slug: string }) {
               <Caption>{project.gallery[0].alt}</Caption>
             </Reveal>
             <div className="grid gap-6 md:col-span-4">
-              {project.gallery.slice(1, 3).map((image, i) => (
-                <Reveal key={image.src + i} delay={80}>
+              {project.gallery.slice(1, 3).map((image) => (
+                <Reveal key={image.src} delay={80}>
                   <div className="media media-zoom warm-img aspect-[4/5]">
                     <img src={image.src} alt={image.alt} loading="lazy" />
                   </div>

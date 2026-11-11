@@ -51,8 +51,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-ivory">
-      <a
-        href="#main"
+      <button
+        type="button"
         onClick={(event) => {
           event.preventDefault();
           const main = document.getElementById("main");
@@ -62,7 +62,7 @@ export default function App() {
         className="sr-only z-[100] bg-ink px-5 py-3 font-label text-xs tracking-widest text-ivory focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
       >
         Skip to content
-      </a>
+      </button>
       <Header path={path} />
       <main id="main" key={path} tabIndex={-1} className="page-enter outline-none">
         <Router path={path} />

@@ -26,6 +26,7 @@ export function usePath() {
     return () => window.removeEventListener("hashchange", onChange);
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scrolling is an intentional reaction to route changes
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [path]);

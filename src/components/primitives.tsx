@@ -46,8 +46,9 @@ export function Reveal({
 
   return (
     <Tag
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ref={ref as any}
+      ref={(node: HTMLElement | null) => {
+        ref.current = node;
+      }}
       data-reveal=""
       style={{ "--reveal-delay": `${delay}ms` } as CSSProperties}
       className={className}

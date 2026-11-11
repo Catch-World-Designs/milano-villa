@@ -17,6 +17,7 @@ export default function Header({ path }: { path: string }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a route change must close an open mobile menu
   useEffect(() => {
     setOpen(false);
   }, [path]);

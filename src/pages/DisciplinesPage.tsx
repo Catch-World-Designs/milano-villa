@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { cn } from "@/utils/cn";
 import { disciplines, images } from "@/data/site";
 import {
@@ -11,20 +11,20 @@ import {
 } from "@/components/primitives";
 
 export default function DisciplinesPage({ focusId }: { focusId?: string }) {
-  const scrollTo = (id: string, smooth = true) => {
+  const scrollTo = useCallback((id: string, smooth = true) => {
     const element = document.getElementById(`discipline-${id}`);
     if (element)
       element.scrollIntoView({
         behavior: smooth ? "smooth" : "auto",
         block: "start",
       });
-  };
+  }, []);
 
   useEffect(() => {
     if (!focusId) return;
     const timer = window.setTimeout(() => scrollTo(focusId, false), 120);
     return () => window.clearTimeout(timer);
-  }, [focusId]);
+  }, [focusId, scrollTo]);
 
   return (
     <>
