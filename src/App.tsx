@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { usePath } from "@/lib/router";
-import { projects } from "@/data/site";
+import { disciplines } from "@/data/site";
+import { getRouteMetadata } from "@/data/routes";
+import { applyDocumentMetadata } from "@/lib/metadata";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
@@ -17,7 +19,12 @@ function Router({ path }: { path: string }) {
   if (path === "/atelier") return <Atelier />;
   if (path === "/disciplines") return <DisciplinesPage />;
   if (path.startsWith("/disciplines/")) {
-    return <DisciplinesPage focusId={path.replace("/disciplines/", "")} />;
+    const focusId = path.replace("/disciplines/", "");
+    return disciplines.some((discipline) => discipline.id === focusId) ? (
+      <DisciplinesPage focusId={focusId} />
+    ) : (
+      <NotFound />
+    );
   }
   if (path === "/commissions") return <Commissions />;
   if (path.startsWith("/commissions/")) {
@@ -28,26 +35,14 @@ function Router({ path }: { path: string }) {
   return <NotFound />;
 }
 
-const titles: Record<string, string> = {
-  "/": "Milano Villa — Italian Design & Furnishings | Washington, DC",
-  "/atelier": "The Atelier — Milano Villa",
-  "/disciplines": "Disciplines — Milano Villa",
-  "/commissions": "Commissions — Milano Villa",
-  "/realization": "The Realization Steps — Milano Villa",
-  "/contact": "Private Consultation — Milano Villa",
-};
-
-export default function App() {
-  const path = usePath();
+export default function App({ initialPath = "/" }: { initialPath?: string }) {
+  const path = usePath(initialPath);
+  const metadata = getRouteMetadata(path);
 
   useEffect(() => {
-    const commission = projects.find(
-      (project) => path === `/commissions/${project.slug}`
-    );
-    document.title = commission
-      ? `${commission.title} — Milano Villa`
-      : titles[path] ?? "Commissions — Milano Villa";
-  }, [path]);
+    const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+    applyDocumentMetadata(metadata, siteUrl);
+  }, [metadata]);
 
   return (
     <div className="min-h-screen bg-ivory">

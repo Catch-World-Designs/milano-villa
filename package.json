@@ -7,9 +7,13 @@
     "baseline:capture": "node scripts/capture-approved-baseline.mjs",
     "check": "npm run lint && npm run typecheck && npm run build",
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:server && npm run build:prerender",
+    "build:client": "vite build",
+    "build:prerender": "node scripts/prerender.mjs",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist-server",
     "lint": "biome lint .",
     "preview": "vite preview",
+    "test:e2e": "npm run build && playwright test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -28,7 +32,6 @@
     "@vitejs/plugin-react": "5.1.1",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
-    "vite": "7.3.8",
-    "vite-plugin-singlefile": "2.3.0"
+    "vite": "7.3.8"
   }
 }

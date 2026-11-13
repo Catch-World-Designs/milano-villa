@@ -1,29 +1,35 @@
 import { useCallback, useEffect, useState, type AnchorHTMLAttributes } from "react";
+import { normalizePath, toPublicPath } from "@/data/routes";
+
+const NAVIGATION_EVENT = "milano:navigate";
 
 function readPath(): string {
-  const raw = window.location.hash.replace(/^#/, "");
-  if (!raw) return "/";
-  return raw.startsWith("/") ? raw : `/${raw}`;
+  return normalizePath(window.location.pathname);
 }
 
 export function navigate(to: string) {
-  const next = to.startsWith("/") ? to : `/${to}`;
-  if (window.location.hash === `#${next}`) {
+  const next = normalizePath(to);
+  if (readPath() === next) {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
-  window.location.hash = next;
+  window.history.pushState({}, "", toPublicPath(next));
+  window.dispatchEvent(new Event(NAVIGATION_EVENT));
 }
 
-export function usePath() {
+export function usePath(initialPath = "/") {
   const [path, setPath] = useState<string>(() =>
-    typeof window === "undefined" ? "/" : readPath()
+    typeof window === "undefined" ? normalizePath(initialPath) : readPath()
   );
 
   useEffect(() => {
     const onChange = () => setPath(readPath());
-    window.addEventListener("hashchange", onChange);
-    return () => window.removeEventListener("hashchange", onChange);
+    window.addEventListener("popstate", onChange);
+    window.addEventListener(NAVIGATION_EVENT, onChange);
+    return () => {
+      window.removeEventListener("popstate", onChange);
+      window.removeEventListener(NAVIGATION_EVENT, onChange);
+    };
   }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: scrolling is an intentional reaction to route changes
@@ -44,15 +50,23 @@ export function Link({ to, children, onClick, ...rest }: LinkProps) {
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       onClick?.(event);
       if (event.defaultPrevented) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        rest.target === "_blank"
+      )
+        return;
       event.preventDefault();
       navigate(to);
     },
-    [onClick, to]
+    [onClick, rest.target, to]
   );
 
   return (
-    <a href={`#${to.startsWith("/") ? to : `/${to}`}`} onClick={handleClick} {...rest}>
+    <a href={toPublicPath(to)} onClick={handleClick} {...rest}>
       {children}
     </a>
   );
