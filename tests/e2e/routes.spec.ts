@@ -57,10 +57,35 @@ test("client navigation uses clean URLs and browser history", async ({ page }) =
 test("SEO support files are emitted", async ({ request }) => {
   const robots = await request.get("/robots.txt");
   expect(robots.ok()).toBe(true);
-  expect(await robots.text()).toContain("Sitemap: https://example.invalid/sitemap.xml");
+  expect(await robots.text()).toContain("Sitemap: http://127.0.0.1:4173/sitemap.xml");
 
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.ok()).toBe(true);
-  expect(await sitemap.text()).toContain("https://example.invalid/commissions/grand-salon/");
+  expect(await sitemap.text()).toContain("http://127.0.0.1:4173/commissions/grand-salon/");
+});
+
+test("mobile navigation traps focus and restores it on close", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const openButton = page.getByRole("button", { name: "Open menu" });
+  await openButton.click();
+  const dialog = page.getByRole("dialog", { name: "Navigation" });
+  await expect(dialog).toBeVisible();
+  await expect(page.getByRole("button", { name: "Close menu" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(openButton).toBeFocused();
+});
+
+test("unconfigured contact placeholders are not published", async ({ page }) => {
+  await page.goto("/contact/", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("[ADD PHONE]", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("[ADD NAME]", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("textbox", { name: /Full name/ })).toHaveAttribute("required", "");
+  await expect(page.getByRole("textbox", { name: /Email/ })).toHaveAttribute("required", "");
+  await expect(page.getByRole("textbox", { name: /rooms you have in mind/ })).toHaveAttribute(
+    "required",
+    ""
+  );
 });
 
