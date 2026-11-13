@@ -1,5 +1,5 @@
 import { Link } from "@/lib/router";
-import { CONTACT, disciplines, nav } from "@/data/site";
+import { CONTACT, disciplines, hasContactValue, nav } from "@/data/site";
 import { LogoStacked } from "./Logo";
 import { ArrowLink } from "./primitives";
 
@@ -71,11 +71,13 @@ export default function Footer() {
                 <br />
                 <span className="text-ivory/45">Enquiries &amp; appointments</span>
               </p>
-              <p>
-                {CONTACT.phone}
-                <br />
-                <span className="text-ivory/45">Telephone</span>
-              </p>
+              {hasContactValue(CONTACT.phone) ? (
+                <p>
+                  {CONTACT.phone}
+                  <br />
+                  <span className="text-ivory/45">Telephone</span>
+                </p>
+              ) : null}
               <p>
                 {CONTACT.location.split(" · ")[0]}
                 <br />

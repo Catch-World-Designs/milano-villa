@@ -1,0 +1,10 @@
+{
+  "name": "Milano Villa",
+  "short_name": "Milano Villa",
+  "description": "Italian design and furnishings for private interiors.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "browser",
+  "background_color": "#FBF9F4",
+  "theme_color": "#FBF9F4"
+}

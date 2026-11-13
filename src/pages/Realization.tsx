@@ -1,4 +1,5 @@
 import { images, processSteps } from "@/data/site";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import {
   ArrowLink,
   Caption,
@@ -55,7 +56,7 @@ export default function Realization() {
       <section className="wrap py-12 md:py-16">
         <Reveal>
           <div className="media warm-img aspect-[16/9] sm:aspect-[21/9]">
-            <img
+            <ResponsiveImage
               src={images.palace}
               alt="An enfilade of grand classical rooms seen in warm light"
               loading="eager"
@@ -130,14 +131,14 @@ export default function Realization() {
             <Reveal>
               <div className="mt-10 grid gap-6 sm:grid-cols-2">
                 <div className="media warm-img aspect-[4/3]">
-                  <img
+                  <ResponsiveImage
                     src={images.carvedPanels}
                     alt="Carved wooden panels laid out on a workshop bench"
                     loading="lazy"
                   />
                 </div>
                 <div className="media warm-img aspect-[4/3]">
-                  <img
+                  <ResponsiveImage
                     src={images.chandelier}
                     alt="A crystal chandelier in warm interior light"
                     loading="lazy"

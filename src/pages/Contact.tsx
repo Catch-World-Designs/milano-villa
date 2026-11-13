@@ -1,4 +1,4 @@
-import { CONTACT, images } from "@/data/site";
+import { CONTACT, hasContactValue, images } from "@/data/site";
 import InquiryForm from "@/components/InquiryForm";
 import { ArchMotif } from "@/components/Logo";
 import {
@@ -62,18 +62,22 @@ export default function Contact() {
                       </a>
                     </dd>
                   </div>
-                  <div className="border-b border-line py-4">
-                    <dt className="label text-ink/35">Telephone</dt>
-                    <dd className="mt-2 text-[0.88rem] font-light text-ink/70">
-                      {CONTACT.phone}
-                    </dd>
-                  </div>
-                  <div className="border-b border-line py-4">
-                    <dt className="label text-ink/35">Principal</dt>
-                    <dd className="mt-2 text-[0.88rem] font-light text-ink/70">
-                      {CONTACT.principal}
-                    </dd>
-                  </div>
+                  {hasContactValue(CONTACT.phone) ? (
+                    <div className="border-b border-line py-4">
+                      <dt className="label text-ink/35">Telephone</dt>
+                      <dd className="mt-2 text-[0.88rem] font-light text-ink/70">
+                        {CONTACT.phone}
+                      </dd>
+                    </div>
+                  ) : null}
+                  {hasContactValue(CONTACT.principal) ? (
+                    <div className="border-b border-line py-4">
+                      <dt className="label text-ink/35">Principal</dt>
+                      <dd className="mt-2 text-[0.88rem] font-light text-ink/70">
+                        {CONTACT.principal}
+                      </dd>
+                    </div>
+                  ) : null}
                   <div className="border-b border-line py-4">
                     <dt className="label text-ink/35">The atelier</dt>
                     <dd className="mt-2 text-[0.88rem] font-light leading-relaxed text-ink/70">

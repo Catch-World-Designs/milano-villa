@@ -6,6 +6,7 @@ import {
 } from "react";
 import { cn } from "@/utils/cn";
 import { Link } from "@/lib/router";
+import ResponsiveImage from "@/components/ResponsiveImage";
 
 /* ── Scroll reveal ───────────────────────────────────── */
 
@@ -203,7 +204,7 @@ export function Figure({
   return (
     <Reveal as="figure" className={cn("media-zoom", className)}>
       <div className={cn("media warm-img", ratio, imageClassName)}>
-        <img
+        <ResponsiveImage
           src={src}
           alt={alt}
           loading={priority ? "eager" : "lazy"}
@@ -273,7 +274,7 @@ export function ConsultationBand({
   return (
     <section className="relative overflow-hidden bg-ink text-ivory">
       {image ? (
-        <img
+        <ResponsiveImage
           src={image}
           alt=""
           aria-hidden="true"

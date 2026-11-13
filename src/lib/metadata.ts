@@ -16,6 +16,12 @@ export function getCanonicalUrl(siteUrl: string, path: string) {
   return `${base}${toPublicPath(path)}`;
 }
 
+export function getAbsoluteAssetUrl(siteUrl: string, assetUrl: string) {
+  if (/^https?:\/\//i.test(assetUrl)) return assetUrl;
+  const base = new URL(`${normalizeSiteUrl(siteUrl)}/`);
+  return new URL(assetUrl.replace(/^\//, ""), `${base.origin}/`).href;
+}
+
 export function getStructuredData(route: RouteMetadata, siteUrl: string) {
   const base = normalizeSiteUrl(siteUrl);
   const canonical = getCanonicalUrl(base, route.path);
@@ -52,7 +58,7 @@ export function getStructuredData(route: RouteMetadata, siteUrl: string) {
       description: route.description || DEFAULT_DESCRIPTION,
       isPartOf: { "@id": `${base}/#website` },
       about: { "@id": `${base}/#organization` },
-      primaryImageOfPage: route.image,
+      primaryImageOfPage: getAbsoluteAssetUrl(base, route.image),
       inLanguage: "en-US",
     },
   ];
@@ -104,6 +110,7 @@ function upsertMeta(selector: string, attributes: Record<string, string>) {
 
 export function applyDocumentMetadata(route: RouteMetadata, siteUrl: string) {
   const canonical = getCanonicalUrl(siteUrl, route.path);
+  const image = getAbsoluteAssetUrl(siteUrl, route.image);
   document.title = route.title;
   upsertMeta('meta[name="description"]', {
     name: "description",
@@ -119,13 +126,13 @@ export function applyDocumentMetadata(route: RouteMetadata, siteUrl: string) {
     content: route.description,
   });
   upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonical });
-  upsertMeta('meta[property="og:image"]', { property: "og:image", content: route.image });
+  upsertMeta('meta[property="og:image"]', { property: "og:image", content: image });
   upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: route.title });
   upsertMeta('meta[name="twitter:description"]', {
     name: "twitter:description",
     content: route.description,
   });
-  upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: route.image });
+  upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: image });
 
   let canonicalLink = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonicalLink) {

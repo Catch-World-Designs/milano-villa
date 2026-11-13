@@ -6,6 +6,9 @@ export const DEFAULT_TITLE =
 export const DEFAULT_DESCRIPTION =
   "Milano Villa is an Italian interiors house in the Washington, DC area. Handcrafted furniture, boiserie, lighting and complete interior commissions, sourced from Italy's finest workshops and delivered worldwide.";
 
+const deploymentBase = `/${import.meta.env.BASE_URL.replace(/^\/+|\/+$/g, "")}`;
+export const BASE_PATH = deploymentBase === "/" ? "/" : `${deploymentBase}/`;
+
 export type RouteMetadata = {
   path: string;
   title: string;
@@ -123,6 +126,19 @@ export function normalizePath(pathname: string) {
 export function toPublicPath(pathname: string) {
   const path = normalizePath(pathname);
   return path === "/" ? "/" : `${path}/`;
+}
+
+export function stripBasePath(pathname: string) {
+  if (BASE_PATH === "/") return normalizePath(pathname);
+  const baseWithoutSlash = BASE_PATH.replace(/\/$/, "");
+  if (pathname === baseWithoutSlash || pathname === BASE_PATH) return "/";
+  return normalizePath(pathname.startsWith(BASE_PATH) ? pathname.slice(BASE_PATH.length - 1) : pathname);
+}
+
+export function toBrowserPath(pathname: string) {
+  const publicPath = toPublicPath(pathname);
+  if (BASE_PATH === "/") return publicPath;
+  return publicPath === "/" ? BASE_PATH : `${BASE_PATH}${publicPath.replace(/^\//, "")}`;
 }
 
 export function getRouteMetadata(pathname: string) {

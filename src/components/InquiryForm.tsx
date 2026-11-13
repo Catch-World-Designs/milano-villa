@@ -21,13 +21,16 @@ const empty: FormState = {
 
 export default function InquiryForm() {
   const [form, setForm] = useState<FormState>(empty);
-  const [sent, setSent] = useState(false);
+  const [appointment, setAppointment] = useState(true);
+  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
+  const [delivered, setDelivered] = useState(false);
   const [mailto, setMailto] = useState(`mailto:${CONTACT.email}`);
+  const endpoint = import.meta.env.VITE_CONTACT_ENDPOINT?.trim();
 
   const update = (key: keyof FormState) => (value: string) =>
     setForm((current) => ({ ...current, [key]: value }));
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const subject = `Private consultation — ${form.name || "Enquiry"}`;
     const lines = [
@@ -42,41 +45,83 @@ export default function InquiryForm() {
       "The project:",
       form.message,
       "",
-      "Please arrange a consultation by appointment.",
+      appointment
+        ? "Please arrange a consultation by appointment."
+        : "A consultation appointment was not requested.",
     ];
     const link = `mailto:${CONTACT.email}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(lines.join("\n"))}`;
     setMailto(link);
-    setSent(true);
-    window.location.href = link;
+    setStatus("submitting");
+    setDelivered(false);
+
+    if (!endpoint) {
+      setStatus("sent");
+      window.location.href = link;
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          ...form,
+          appointment,
+          website: "",
+          source: "milano-villa-website",
+        }),
+        credentials: "omit",
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("Submission failed");
+      setDelivered(true);
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    } finally {
+      window.clearTimeout(timeout);
+    }
   };
 
-  if (sent) {
+  if (status === "sent") {
     return (
       <div
         className="border-t border-gold/50 pt-8"
         role="status"
         aria-live="polite"
       >
-        <p className="label text-gold">Enquiry prepared</p>
+        <p className="label text-gold">{delivered ? "Enquiry sent" : "Enquiry prepared"}</p>
         <h3 className="mt-4 font-serif text-[2.1rem] font-light leading-[1.15] md:text-[2.5rem]">
-          Your note is ready.
+          {delivered ? "Thank you for your note." : "Your note is ready."}
         </h3>
         <p className="body-copy mt-5 max-w-md">
-          Your email client should have opened with the enquiry addressed to{" "}
-          <span className="text-ink">{CONTACT.email}</span>. If it did not open,
-          use the link below — the concierge will read your note personally.
+          {delivered ? (
+            <>Your enquiry has been delivered to the Milano Villa concierge.</>
+          ) : (
+            <>
+              Your email client should have opened with the enquiry addressed to{" "}
+              <span className="text-ink">{CONTACT.email}</span>. If it did not open,
+              use the link below — the concierge will read your note personally.
+            </>
+          )}
         </p>
         <div className="mt-7 flex flex-wrap items-center gap-4">
-          <a href={mailto} className="btn bg-ink text-ivory hover:bg-gold hover:text-ink">
-            Open the email
-          </a>
+          {!delivered ? (
+            <a href={mailto} className="btn bg-ink text-ivory hover:bg-gold hover:text-ink">
+              Open the email
+            </a>
+          ) : null}
           <button
             type="button"
             onClick={() => {
-              setSent(false);
+              setStatus("idle");
+              setDelivered(false);
               setForm(empty);
+              setAppointment(true);
             }}
             className="label text-ink/50 underline-offset-8 transition-colors hover:text-gold hover:underline"
           >
@@ -98,6 +143,10 @@ export default function InquiryForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate={false}>
+      <div className="sr-only" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="field-label">
@@ -201,7 +250,8 @@ export default function InquiryForm() {
           id="appointment"
           name="appointment"
           type="checkbox"
-          defaultChecked
+          checked={appointment}
+          onChange={(event) => setAppointment(event.target.checked)}
           className="mt-1 h-4 w-4 shrink-0 accent-[#B08D57]"
         />
         <label
@@ -215,15 +265,27 @@ export default function InquiryForm() {
       <div className="mt-8 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="submit"
+          disabled={status === "submitting"}
           className="btn border-ink bg-ink text-ivory hover:border-gold hover:bg-gold hover:text-ink"
         >
-          Send enquiry
+          {status === "submitting" ? "Sending…" : "Send enquiry"}
           <span aria-hidden="true">→</span>
         </button>
         <p className="max-w-[16rem] text-[0.68rem] font-light leading-relaxed text-ink/35">
-          Sending opens your email client, addressed to the concierge.
+          {endpoint
+            ? "Your note will be delivered securely to the concierge."
+            : "Sending opens your email client, addressed to the concierge."}
         </p>
       </div>
+      {status === "error" ? (
+        <p className="mt-5 text-[0.78rem] font-light leading-relaxed text-ink/70" role="alert">
+          The enquiry could not be delivered. Please try again or write directly to{" "}
+          <a className="underline decoration-gold/50 underline-offset-4" href={mailto}>
+            {CONTACT.email}
+          </a>
+          .
+        </p>
+      ) : null}
     </form>
   );
 }

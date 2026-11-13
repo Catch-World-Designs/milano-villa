@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { cn } from "@/utils/cn";
 import { disciplines, images } from "@/data/site";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import {
   ArrowLink,
   ConsultationBand,
@@ -119,7 +120,7 @@ export default function DisciplinesPage({ focusId }: { focusId?: string }) {
                     )}
                   >
                     <div className="media media-zoom warm-img aspect-[4/3]">
-                      <img
+                      <ResponsiveImage
                         src={discipline.image}
                         alt={discipline.alt}
                         loading="lazy"

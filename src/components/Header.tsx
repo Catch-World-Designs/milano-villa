@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/utils/cn";
 import { Link } from "@/lib/router";
 import { nav, CONTACT } from "@/data/site";
@@ -7,8 +7,17 @@ import { LogoHorizontal, LogoMark } from "./Logo";
 export default function Header({ path }: { path: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const isHome = path === "/";
   const transparent = isHome && !scrolled;
+
+  const openMenu = () => {
+    setOpen(true);
+    // Pointer activation may restore focus to the trigger after the click event.
+    // Move it into the modal on the next browser task, once that default action settles.
+    window.setTimeout(() => closeButtonRef.current?.focus({ preventScroll: true }), 50);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 28);
@@ -22,15 +31,37 @@ export default function Header({ path }: { path: string }) {
     setOpen(false);
   }, [path]);
 
-  useEffect(() => {
-    document.body.classList.toggle("no-scroll", open);
+  useLayoutEffect(() => {
+    if (!open) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    document.body.classList.add("no-scroll");
+    closeButtonRef.current?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !menuRef.current) return;
+      const focusable = Array.from(
+        menuRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.classList.remove("no-scroll");
       window.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus();
     };
   }, [open]);
 
@@ -87,7 +118,7 @@ export default function Header({ path }: { path: string }) {
 
           <button
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={openMenu}
             className={cn(
               "flex items-center gap-3 xl:hidden",
               transparent ? "text-ivory" : "text-ink"
@@ -106,6 +137,11 @@ export default function Header({ path }: { path: string }) {
       </header>
 
       <div
+        ref={menuRef}
+        role="dialog"
+        aria-modal={open ? "true" : undefined}
+        aria-label="Navigation"
+        inert={!open}
         className={cn(
           "fixed inset-0 z-50 bg-ivory transition-[opacity,visibility] duration-500 xl:hidden",
           open ? "visible opacity-100" : "invisible opacity-0"
@@ -118,6 +154,7 @@ export default function Header({ path }: { path: string }) {
               <LogoHorizontal tone="dark" />
             </Link>
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={() => setOpen(false)}
               className="label flex items-center gap-2 text-ink"

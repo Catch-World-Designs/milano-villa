@@ -5,6 +5,7 @@
       "src/**/*.ts",
       "src/**/*.tsx",
       "scripts/**/*.mjs",
+      "assets/**/*.json",
       "tests/**/*.ts",
       "playwright.config.ts",
       "vite.config.ts"

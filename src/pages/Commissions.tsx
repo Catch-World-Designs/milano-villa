@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router";
 import { cn } from "@/utils/cn";
 import { images, projects } from "@/data/site";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import {
   ArrowLink,
   Caption,
@@ -84,7 +85,7 @@ export default function Commissions() {
                 className="group block"
               >
                 <div className={cn("media media-zoom warm-img", ratios[index])}>
-                  <img
+                  <ResponsiveImage
                     src={project.image}
                     alt={project.alt}
                     loading={index < 2 ? "eager" : "lazy"}
@@ -162,7 +163,7 @@ export default function Commissions() {
           </div>
           <Reveal delay={120} className="mt-12">
             <div className="media aspect-[21/9] md:aspect-[24/7]">
-              <img
+              <ResponsiveImage
                 src={images.palace}
                 alt="A long enfilade of classical rooms with chandeliers and stone floors"
                 loading="lazy"

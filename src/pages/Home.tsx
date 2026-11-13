@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "@/lib/router";
 import { cn } from "@/utils/cn";
 import { disciplines, images, processSteps, projects, CONTACT } from "@/data/site";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import {
   ArrowLink,
   Caption,
@@ -25,7 +26,7 @@ function CommissionPlate({
     <Reveal className={className}>
       <Link to={`/commissions/${project.slug}`} className="group block">
         <div className={cn("media media-zoom warm-img", ratio)}>
-          <img src={project.image} alt={project.alt} loading="lazy" decoding="async" />
+          <ResponsiveImage src={project.image} alt={project.alt} loading="lazy" />
         </div>
         <div className="mt-4 border-t border-line pt-4">
           <div className="flex items-baseline justify-between gap-4">
@@ -52,7 +53,7 @@ export default function Home() {
     <>
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-ivory">
-        <img
+        <ResponsiveImage
           src={images.hero}
           alt="A grand European salon with gilded detail, marble and a crystal chandelier"
           className="absolute inset-0 h-full w-full object-cover object-center"
@@ -244,7 +245,7 @@ export default function Home() {
                   </span>
                   <span className="lg:hidden">
                     <span className="media block h-14 w-11">
-                      <img src={discipline.image} alt="" loading="lazy" />
+                      <ResponsiveImage src={discipline.image} alt="" loading="lazy" />
                     </span>
                   </span>
                   <span
@@ -264,7 +265,7 @@ export default function Home() {
               <div className="sticky top-32">
                 <div className="media aspect-[4/5] bg-ivory-warm">
                   {disciplines.map((discipline, index) => (
-                    <img
+                    <ResponsiveImage
                       key={discipline.id}
                       src={discipline.image}
                       alt={discipline.alt}
@@ -398,7 +399,7 @@ export default function Home() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
           <Reveal className="lg:col-span-6">
             <div className="media media-zoom warm-img aspect-[4/5] md:aspect-[5/5]">
-              <img
+              <ResponsiveImage
                 src={images.artisan}
                 alt="An artisan carving a detail by hand in an Italian workshop"
                 loading="lazy"
@@ -462,7 +463,7 @@ export default function Home() {
 
       {/* ── Closing invitation ───────────────────────── */}
       <section className="relative overflow-hidden bg-ink">
-        <img
+        <ResponsiveImage
           src={images.villa}
           alt="An Italian villa with a formal garden at dusk"
           loading="lazy"

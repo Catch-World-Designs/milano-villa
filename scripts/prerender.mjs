@@ -13,6 +13,7 @@ const siteUrl = (process.env.VITE_SITE_URL || env.VITE_SITE_URL || "https://exam
   /\/+$/,
   ""
 );
+const siteOrigin = new URL(`${siteUrl}/`).origin;
 
 if (siteUrl === "https://example.invalid") {
   process.stderr.write(
@@ -33,6 +34,9 @@ function createHead(metadata, structuredData) {
   const canonical =
     metadata.path === "/" ? `${siteUrl}/` : `${siteUrl}${metadata.path}/`;
   const robots = metadata.index ? "index, follow" : "noindex, nofollow";
+  const image = /^https?:\/\//i.test(metadata.image)
+    ? metadata.image
+    : new URL(metadata.image.replace(/^\//, ""), `${siteOrigin}/`).href;
   return [
     `<title>${escapeAttribute(metadata.title)}</title>`,
     `<meta name="description" content="${escapeAttribute(metadata.description)}" />`,
@@ -43,11 +47,11 @@ function createHead(metadata, structuredData) {
     `<meta property="og:title" content="${escapeAttribute(metadata.title)}" />`,
     `<meta property="og:description" content="${escapeAttribute(metadata.description)}" />`,
     `<meta property="og:url" content="${escapeAttribute(canonical)}" />`,
-    `<meta property="og:image" content="${escapeAttribute(metadata.image)}" />`,
+    `<meta property="og:image" content="${escapeAttribute(image)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escapeAttribute(metadata.title)}" />`,
     `<meta name="twitter:description" content="${escapeAttribute(metadata.description)}" />`,
-    `<meta name="twitter:image" content="${escapeAttribute(metadata.image)}" />`,
+    `<meta name="twitter:image" content="${escapeAttribute(image)}" />`,
     `<script id="structured-data" type="application/ld+json">${escapeJson(structuredData)}</script>`,
   ].join("\n    ");
 }

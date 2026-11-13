@@ -1,5 +1,6 @@
 import { Link } from "@/lib/router";
 import { projects, images } from "@/data/site";
+import ResponsiveImage from "@/components/ResponsiveImage";
 import {
   ArrowLink,
   Caption,
@@ -21,7 +22,7 @@ export default function CommissionDetail({ slug }: { slug: string }) {
     <>
       {/* ── Plate image ──────────────────────────────── */}
       <header className="relative mt-[74px] h-[62vh] min-h-[440px] overflow-hidden bg-ink md:mt-[92px] md:h-[76vh]">
-        <img
+        <ResponsiveImage
           src={project.image}
           alt={project.alt}
           className="absolute inset-0 h-full w-full object-cover"
@@ -155,7 +156,7 @@ export default function CommissionDetail({ slug }: { slug: string }) {
           <div className="grid gap-6 md:grid-cols-12 md:gap-8">
             <Reveal className="md:col-span-8">
               <div className="media media-zoom warm-img aspect-[16/10]">
-                <img
+                <ResponsiveImage
                   src={project.gallery[0].src}
                   alt={project.gallery[0].alt}
                   loading="lazy"
@@ -167,7 +168,7 @@ export default function CommissionDetail({ slug }: { slug: string }) {
               {project.gallery.slice(1, 3).map((image) => (
                 <Reveal key={image.src} delay={80}>
                   <div className="media media-zoom warm-img aspect-[4/5]">
-                    <img src={image.src} alt={image.alt} loading="lazy" />
+                    <ResponsiveImage src={image.src} alt={image.alt} loading="lazy" />
                   </div>
                   <Caption>{image.alt}</Caption>
                 </Reveal>
@@ -183,7 +184,7 @@ export default function CommissionDetail({ slug }: { slug: string }) {
           <Link to={`/commissions/${next.slug}`} className="group grid gap-8 md:grid-cols-12 md:items-center">
             <div className="md:col-span-5 lg:col-span-4">
               <div className="media media-zoom warm-img aspect-[4/3]">
-                <img src={next.image} alt={next.alt} loading="lazy" />
+                <ResponsiveImage src={next.image} alt={next.alt} loading="lazy" />
               </div>
             </div>
             <div className="flex items-center justify-between gap-6 md:col-span-7 lg:col-span-7 lg:col-start-6">

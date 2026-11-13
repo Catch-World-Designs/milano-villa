@@ -1,0 +1,37 @@
+# Image sources
+
+The responsive image files in this directory are optimized copies of the approved prototype photography. Each source was obtained from Pexels and remains subject to the Pexels license: https://www.pexels.com/license/
+
+Source record generated 2026-11-13.
+
+- `hero`: https://www.pexels.com/photo/37150091/ (Pexels photo ID 37150091)
+- `salon`: https://www.pexels.com/photo/27466749/ (Pexels photo ID 27466749)
+- `panel-room`: https://www.pexels.com/photo/8141957/ (Pexels photo ID 8141957)
+- `dining`: https://www.pexels.com/photo/30117468/ (Pexels photo ID 30117468)
+- `marble-hall`: https://www.pexels.com/photo/7045766/ (Pexels photo ID 7045766)
+- `foyer`: https://www.pexels.com/photo/14011664/ (Pexels photo ID 14011664)
+- `palace`: https://www.pexels.com/photo/35723946/ (Pexels photo ID 35723946)
+- `living`: https://www.pexels.com/photo/8092427/ (Pexels photo ID 8092427)
+- `lounge`: https://www.pexels.com/photo/40081423/ (Pexels photo ID 40081423)
+- `castle`: https://www.pexels.com/photo/37150091/ (Pexels photo ID 37150091)
+- `villa`: https://www.pexels.com/photo/38535918/ (Pexels photo ID 38535918)
+- `courtyard`: https://www.pexels.com/photo/38535916/ (Pexels photo ID 38535916)
+- `chandelier`: https://www.pexels.com/photo/31748049/ (Pexels photo ID 31748049)
+- `piano`: https://www.pexels.com/photo/26757208/ (Pexels photo ID 26757208)
+- `fresco`: https://www.pexels.com/photo/32358637/ (Pexels photo ID 32358637)
+- `ceiling`: https://www.pexels.com/photo/37872141/ (Pexels photo ID 37872141)
+- `venice-hall`: https://www.pexels.com/photo/27595791/ (Pexels photo ID 27595791)
+- `boiserie`: https://www.pexels.com/photo/19208266/ (Pexels photo ID 19208266)
+- `carved-panels`: https://www.pexels.com/photo/19208265/ (Pexels photo ID 19208265)
+- `artisan`: https://www.pexels.com/photo/34142778/ (Pexels photo ID 34142778)
+- `hands`: https://www.pexels.com/photo/31011100/ (Pexels photo ID 31011100)
+- `chisel`: https://www.pexels.com/photo/5974289/ (Pexels photo ID 5974289)
+- `planing`: https://www.pexels.com/photo/13005858/ (Pexels photo ID 13005858)
+- `door`: https://www.pexels.com/photo/14125257/ (Pexels photo ID 14125257)
+- `door-detail`: https://www.pexels.com/photo/34386097/ (Pexels photo ID 34386097)
+- `art`: https://www.pexels.com/photo/4588835/ (Pexels photo ID 4588835)
+- `sculpture`: https://www.pexels.com/photo/31708615/ (Pexels photo ID 31708615)
+- `armchair`: https://www.pexels.com/photo/6394545/ (Pexels photo ID 6394545)
+- `sofa`: https://www.pexels.com/photo/7045760/ (Pexels photo ID 7045760)
+- `velvet`: https://www.pexels.com/photo/13169786/ (Pexels photo ID 13169786)
+- `chair-detail`: https://www.pexels.com/photo/30233116/ (Pexels photo ID 30233116)

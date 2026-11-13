@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState, type AnchorHTMLAttributes } from "react";
-import { normalizePath, toPublicPath } from "@/data/routes";
+import { normalizePath, stripBasePath, toBrowserPath } from "@/data/routes";
 
 const NAVIGATION_EVENT = "milano:navigate";
 
 function readPath(): string {
-  return normalizePath(window.location.pathname);
+  return stripBasePath(window.location.pathname);
 }
 
 export function navigate(to: string) {
@@ -13,8 +13,9 @@ export function navigate(to: string) {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
-  window.history.pushState({}, "", toPublicPath(next));
+  window.history.pushState({}, "", toBrowserPath(next));
   window.dispatchEvent(new Event(NAVIGATION_EVENT));
+  window.requestAnimationFrame(() => document.getElementById("main")?.focus());
 }
 
 export function usePath(initialPath = "/") {
@@ -66,7 +67,7 @@ export function Link({ to, children, onClick, ...rest }: LinkProps) {
   );
 
   return (
-    <a href={toPublicPath(to)} onClick={handleClick} {...rest}>
+    <a href={toBrowserPath(to)} onClick={handleClick} {...rest}>
       {children}
     </a>
   );
